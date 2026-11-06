@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html ng-app="siteApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Portal</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+</head>
+<body>
+  <nav>
+    <a href="#!/">Home</a> |
+    <a href="#!/about">About</a> |
+    <a href="#!/contact">Contact</a> |
+    <a href="#!/login">Login</a> |
+    <a href="#!/register">Register</a>
+  </nav>
+  <hr>
+  <div ng-view></div>
+
+  <script>
+    var app = angular.module('siteApp', ['ngRoute']);
+
+    app.config(function ($routeProvider) {
+      $routeProvider
+        .when('/', {
+          template: '<h2>Home</h2><p>Welcome to the Student Portal.</p>'
+        })
+        .when('/about', {
+          template: '<h2>About</h2><p>This portal is built with Express, MongoDB and AngularJS.</p>'
+        })
+        .when('/contact', {
+          template: '<h2>Contact Us</h2>' +
+            '<form ng-submit="send()">' +
+            '<input ng-model="c.name" placeholder="Name"><br><br>' +
+            '<input ng-model="c.email" placeholder="Email"><br><br>' +
+            '<textarea ng-model="c.message" placeholder="Message"></textarea><br><br>' +
+            '<button type="submit">Send</button></form><p>{{msg}}</p>',
+          controller: 'ContactCtrl'
+        })
+        .when('/login', {
+          template: '<h2>Login</h2>' +
+            '<form ng-submit="login()">' +
+            '<input ng-model="u.email" placeholder="Email"><br><br>' +
+            '<input type="password" ng-model="u.password" placeholder="Password"><br><br>' +
+            '<button type="submit">Login</button></form><p>{{msg}}</p>',
+          controller: 'AuthCtrl'
+        })
+        .when('/register', {
+          template: '<h2>Register</h2>' +
+            '<form ng-submit="register()">' +
+            '<input ng-model="u.name" placeholder="Name"><br><br>' +
+            '<input ng-model="u.email" placeholder="Email"><br><br>' +
+            '<input type="password" ng-model="u.password" placeholder="Password"><br><br>' +
+            '<button type="submit">Register</button></form><p>{{msg}}</p>',
+          controller: 'AuthCtrl'
+        })
+        .otherwise({ redirectTo: '/' });
+    });
+
+    app.controller('ContactCtrl', function ($scope, $http) {
+      $scope.send = function () {
+        $http.post('/api/contact', $scope.c).then(function (r) { $scope.msg = r.data.message; });
+      };
+    });
+
+    app.controller('AuthCtrl', function ($scope, $http) {
+      $scope.u = {};
+      $scope.register = function () {
+        $http.post('/api/register', $scope.u).then(
+          function (r) { $scope.msg = r.data.message; },
+          function (r) { $scope.msg = r.data.message; });
+      };
+      $scope.login = function () {
+        $http.post('/api/login', $scope.u).then(
+          function (r) { $scope.msg = r.data.message; },
+          function (r) { $scope.msg = r.data.message; });
+      };
+    });
+  </script>
+</body>
+</html>

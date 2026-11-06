@@ -1,0 +1,5 @@
+.container { max-width: 500px; margin: 40px auto; font-family: sans-serif; text-align: center; }
+.add-row input { padding: 8px; width: 70%; }
+.add-row button, li button { padding: 6px 12px; margin-left: 6px; cursor: pointer; }
+ul { list-style: none; padding: 0; }
+li { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #ddd; }
